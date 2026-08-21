@@ -1,0 +1,380 @@
+@import "tailwindcss";
+
+@theme {
+  --color-festive-50: #fff7ed;
+  --color-festive-500: #f97316;
+  --color-festive-600: #ea580c;
+  --color-festive-700: #c2410c;
+  --font-display: "Poppins", sans-serif;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(249, 115, 22, 0);
+  }
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 40%);
+  min-height: 100vh;
+}
+
+/* ---------- App shell ---------- */
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 1.25rem 1rem 2rem;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.app-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-title i {
+  color: #ea580c;
+}
+
+.today-pill {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+}
+
+/* ---------- Festival banner ---------- */
+.festival-banner {
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.4rem;
+  background: linear-gradient(135deg, #f97316, #ea580c 60%, #c2410c);
+  color: white;
+  box-shadow: 0 10px 30px -10px rgba(234, 88, 12, 0.55);
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.festival-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 90% 10%, rgba(255,255,255,0.25), transparent 55%);
+}
+
+.festival-banner-emoji {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.festival-banner-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 0.35rem;
+}
+
+.festival-banner-msg {
+  font-size: 0.875rem;
+  opacity: 0.95;
+  margin-top: 0.25rem;
+}
+
+.no-festival-card {
+  border-radius: 1.25rem;
+  padding: 1.1rem 1.3rem;
+  background: white;
+  border: 1px dashed #e5e7eb;
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* ---------- Month navigator ---------- */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.month-nav-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  transition: all 0.15s ease;
+}
+
+.month-nav-btn:hover {
+  background: #fff1e6;
+  border-color: #fdba74;
+  color: #ea580c;
+}
+
+.month-nav-label {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* ---------- Calendar grid ---------- */
+.weekday-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.day-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.35rem;
+}
+
+.day-cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #374151;
+  background: white;
+  border: 1px solid #f3f4f6;
+  position: relative;
+  cursor: default;
+  transition: all 0.15s ease;
+}
+
+.day-cell.empty {
+  background: transparent;
+  border: none;
+}
+
+.day-cell.is-today {
+  border: 2px solid #ea580c;
+  color: #ea580c;
+  font-weight: 700;
+  animation: pulseGlow 2s infinite;
+}
+
+.day-cell.has-festival {
+  background: #fff1e6;
+}
+
+.day-cell.has-festival.is-today {
+  background: #ea580c;
+  color: white;
+}
+
+.festival-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #ea580c;
+  margin-top: 2px;
+}
+
+.day-cell.has-festival.is-today .festival-dot {
+  background: white;
+}
+
+/* ---------- Upcoming list ---------- */
+.upcoming-section {
+  margin-top: 1.75rem;
+}
+
+.upcoming-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.upcoming-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: white;
+  border: 1px solid #f3f4f6;
+  border-radius: 0.9rem;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.upcoming-emoji {
+  font-size: 1.4rem;
+}
+
+.upcoming-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.upcoming-date {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.fade-in {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.holiday-badge {
+  display: inline-block;
+  background: white;
+  color: #dc2626;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- State selector modal ---------- */
+.state-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 50;
+}
+
+.state-modal {
+  background: white;
+  border-radius: 1.25rem;
+  padding: 2rem 1.75rem;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.3);
+}
+
+.state-modal-emoji {
+  font-size: 2.75rem;
+}
+
+.state-modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-top: 0.5rem;
+}
+
+.state-modal-subtitle {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.state-select {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  background: white;
+}
+
+.state-continue-btn {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 0.75rem;
+  border: none;
+  background: #ea580c;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.state-continue-btn:disabled {
+  background: #fdba74;
+  cursor: not-allowed;
+}
+
+.state-continue-btn:not(:disabled):hover {
+  background: #c2410c;
+}
+
+.state-change-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.7rem;
+  color: #9ca3af;
+  cursor: pointer;
+  margin-top: 0.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.state-change-link:hover {
+  color: #ea580c;
+}
+
+.day-cell.is-sunday:not(.is-today) span:first-child {
+  color: #dc2626;
+}
+
+.weekday-row span.is-sunday {
+  color: #dc2626;
+}
