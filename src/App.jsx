@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Header from "./components/Header";
 import FestivalBanner from "./components/FestivalBanner";
 import MonthNavigator from "./components/MonthNavigator";
@@ -11,6 +11,7 @@ export default function App() {
   const today = new Date();
   const [monthIndex, setMonthIndex] = useState(today.getMonth());
   const [year, setYear] = useState(today.getFullYear());
+  const [touchStartX, setTouchStartX] = useState(null);
 
   const { selectedState, setSelectedState, clearSelectedState } = useSelectedState();
   const { list, todayFestival } = useTodayFestival(today);
@@ -24,7 +25,7 @@ export default function App() {
 
   const filteredToday =
     todayFestival &&
-    (todayFestival.states.includes("all") || todayFestival.states.includes(selectedState))
+      (todayFestival.states.includes("all") || todayFestival.states.includes(selectedState))
       ? todayFestival
       : null;
 
@@ -58,6 +59,35 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === "SELECT" || tag === "INPUT" || tag === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "ArrowRight") handleNext();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [monthIndex, year]);
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartX;
+    const SWIPE_THRESHOLD = 50;
+
+    if (deltaX > SWIPE_THRESHOLD) handlePrev();
+    else if (deltaX < -SWIPE_THRESHOLD) handleNext();
+
+    setTouchStartX(null);
+  };
+
   if (!selectedState) {
     return <StateSelector onSelect={setSelectedState} />;
   }
@@ -73,12 +103,14 @@ export default function App() {
         onPrev={handlePrev}
         onNext={handleNext}
       />
-      <CalendarGrid
-        monthIndex={monthIndex}
-        year={year}
-        festivals={filteredList}
-        today={today}
-      />
+      <div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        <CalendarGrid
+          monthIndex={monthIndex}
+          year={year}
+          festivals={filteredList}
+          today={today}
+        />
+      </div>
 
       <section className="upcoming-section">
         <h2 className="upcoming-title">
