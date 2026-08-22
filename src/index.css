@@ -70,6 +70,9 @@ body {
   background: #f3f4f6;
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
+  text-align: center;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* ---------- Festival banner ---------- */
